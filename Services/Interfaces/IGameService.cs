@@ -7,5 +7,8 @@ namespace GameAPI.Services.Interfaces
         IEnumerable<GameResponseDTO> GetAll();
         GameResponseDTO Create(GameCreateDTO newGame);
         GameResponseDTO GetById(int id);
+        bool Delete(int id);
+        GameResponseDTO Update(int id, GameUpdateDTO updGame);
+        IEnumerable<GameResponseDTO> GetByGenre(string? genre);
     }
 }

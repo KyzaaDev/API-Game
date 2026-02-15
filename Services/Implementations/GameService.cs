@@ -36,7 +36,7 @@ namespace GameAPI.Services.Implementations
         {
             var gameNew = new Game
             {
-                Id = _games.Count() + 1,
+                Id = _games.Any() ? _games.Max(g => g.Id)+ 1 : 1,
                 NamaGame = newGame.NamaGame,
                 Genre = newGame.Genre,
                 Harga = newGame.Harga,
@@ -69,6 +69,56 @@ namespace GameAPI.Services.Implementations
                 Harga = game.Harga,
                 Rating = game.Rating
             };
+        }
+
+        public bool Delete(int id)
+        {
+            var game = _games.FirstOrDefault(g => g.Id == id);
+            if (game == null) return false;
+
+            _games.Remove(game);
+            return true;
+        }
+
+        public GameResponseDTO Update(int id, GameUpdateDTO updGame)
+        {
+            var game = _games.FirstOrDefault(g => g.Id == id);
+            if (game == null) return null;
+
+            game.NamaGame = updGame.NamaGame;
+            game.Genre = updGame.Genre;
+            game.Rating = updGame.Rating;
+            game.Harga = updGame.Harga;
+
+            return new GameResponseDTO
+            {
+                Id = game.Id,
+                NamaGame = game.NamaGame,
+                Genre = game.Genre,
+                Rating = game.Rating,
+                Harga = game.Harga
+            };
+        }
+
+        public IEnumerable<GameResponseDTO> GetByGenre(string? genre)
+        {
+            var query = _games.AsQueryable();
+
+            if (!string.IsNullOrEmpty(genre))
+            {
+                query = query.Where(g => g.Genre.Contains(genre, StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            var games = query.Select(g => new GameResponseDTO
+            {
+                Id = g.Id,
+                NamaGame = g.NamaGame,
+                Genre = g.Genre,
+                Harga = g.Harga,
+                Rating = g.Rating
+            }).ToList();
+
+            return games;
         }
     }
 }

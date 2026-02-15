@@ -37,59 +37,35 @@ namespace GameAPI.Controllers
         public ActionResult<GameResponseDTO> Create([FromBody] GameCreateDTO newGame)
         {
             var game = _gameService.Create(newGame);
-            return Ok(game);
-            //return CreatedAtAction(nameof(GetById), new { id = game.Id }, gameReturn);
+            return CreatedAtAction(nameof(GetById), new { id = game.Id }, game);
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult Update(int id, [FromBody] GameUpdateDTO updGame)
-        //{
-        //    var game = _games.FirstOrDefault(g => g.Id == id);
-        //    if (game == null) return NotFound(new { message = "Data tidak ditemukan" });
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] GameUpdateDTO updGame)
+        {
+            var game = _gameService.Update(id, updGame);
+            if (game == null) return NotFound(new { message = "Data tidak ditemukan" });
 
-        //    game.NamaGame = updGame.NamaGame;
-        //    game.Genre = updGame.Genre;
-        //    game.Harga = updGame.Harga;
-        //    game.Rating = updGame.Rating;
+            return NoContent();
+        }
 
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        public IActionResult delete(int id)
+        {
+            var game = _gameService.Delete(id);
+            if (game == false) return NotFound(new { message = "Data tidak ditemukan" });
 
-        //[HttpDelete("{id}")]
-        //public IActionResult delete(int id)
-        //{
-        //    var game = _games.FirstOrDefault(g => g.Id == id);
-        //    if (game == null) return NotFound(new { message = "Data tidak ditemukan" });
+            return NoContent();
+        }
 
-        //    _games.Remove(game);
+        [HttpGet("search")]
+        public ActionResult<IEnumerable<GameResponseDTO>> GetByGenre([FromQuery] string? genre)
+        {
+            var results = _gameService.GetByGenre(genre);
+            if (results == null && !results.Any()) return NotFound(new { message = $"Tidak ada game dengan genre {genre}" });
+            return Ok(results);
 
-        //    return NoContent();
-        //}
-
-        //[HttpGet("search")]
-        //public ActionResult<IEnumerable<GameResponseDTO>> Search([FromQuery] string? genre)
-        //{
-        //    var query = _games.AsQueryable();
-
-        //    if (!string.IsNullOrEmpty(genre))
-        //    {
-        //        query = query.Where(g => g.Genre.ToLower() == genre.ToLower());
-        //    }
-
-        //    var games = query.Select(g => new GameResponseDTO
-        //    {
-        //        Id = g.Id,
-        //        NamaGame = g.NamaGame,
-        //        Genre = g.Genre,
-        //        Harga = g.Harga,
-        //        Rating = g.Rating
-        //    }).ToList();
-
-        //    if (!games.Any())
-        //        return NotFound(new { message = $"Tidak ada game dengan genre {genre}" });
-
-        //    return Ok(games);
-        //}
+        }
 
 
     }
