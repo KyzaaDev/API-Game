@@ -1,20 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GameAPI.DTOs
+namespace GameAPI.DTOs.Game
 {
-    public class GameCreateDTO
+    public class GameResponseDTO
     {
+        [Required]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Nama game harus diisi")]
-        public string NamaGame { get; set; } = string.Empty;
+        public string NamaGame { get; set; }
 
         [Required(ErrorMessage = "Genre game harus diisi")]
-        public string Genre { get; set; } = string.Empty;
+        public string Genre { get; set; }
 
         [Required(ErrorMessage = "Harga harus diisi")]
-        public decimal Harga { get; set; } = decimal.Zero;
+        public decimal Harga { get; set; }
 
         [Required]
         [Range(1, 10, ErrorMessage = "Rating harus pada rentang 1 sampai 10")]
-        public double Rating { get; set; } = double.MaxValue;
+        public double Rating { get; set; }
     }
 }

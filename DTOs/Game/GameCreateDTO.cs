@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GameAPI.DTOs
+namespace GameAPI.DTOs.Game
 {
-    public class GameUpdateDTO
+    public class GameCreateDTO
     {
         [Required(ErrorMessage = "Nama game harus diisi")]
         public string NamaGame { get; set; } = string.Empty;
