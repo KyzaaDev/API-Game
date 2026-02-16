@@ -4,6 +4,7 @@ using GameAPI.Models;
 using System.Collections.Generic;
 using GameAPI.DTOs.Game;
 using GameAPI.Services.Interfaces;
+using GameAPI.Data;
 
 namespace GameAPI.Controllers
 {
@@ -12,7 +13,7 @@ namespace GameAPI.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGameService _gameService;
-        public GameController(IGameService gameService)
+        public GameController(IGameService gameService, AppDbContext context)
         {
             _gameService = gameService;
         }
@@ -58,7 +59,7 @@ namespace GameAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("search")]
+        [HttpGet("search")] 
         public ActionResult<IEnumerable<GameResponseDTO>> GetByGenre([FromQuery] string? genre)
         {
             var results = _gameService.GetByGenre(genre);

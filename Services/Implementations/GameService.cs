@@ -1,4 +1,5 @@
-﻿using GameAPI.DTOs.Game;
+﻿using GameAPI.Data;
+using GameAPI.DTOs.Game;
 using GameAPI.Models;
 using GameAPI.Services.Interfaces;
 
@@ -6,6 +7,12 @@ namespace GameAPI.Services.Implementations
 {
     public class GameService : IGameService
     {
+        private readonly AppDbContext _context;
+        public GameService(AppDbContext context)
+        {
+            _context = context;
+        }
+
         private static List<Game> _games = new List<Game>
         {
             new Game { Id = 1, NamaGame = "The Witcher 3", Genre = "RPG", Harga = 350000, Rating = 9.8 },
@@ -22,7 +29,7 @@ namespace GameAPI.Services.Implementations
 
         public IEnumerable<GameResponseDTO> GetAll()
         {
-            return _games.Select(g => new GameResponseDTO
+            return _context.Games.Select(g => new GameResponseDTO
             {
                 Id = g.Id,
                 NamaGame = g.NamaGame,
