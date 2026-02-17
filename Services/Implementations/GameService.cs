@@ -36,6 +36,7 @@ namespace GameAPI.Services.Implementations
             };
 
             _context.Games.Add(gameNew);
+            _context.SaveChanges();
 
             return new GameResponseDTO
             {
