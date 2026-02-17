@@ -13,20 +13,6 @@ namespace GameAPI.Services.Implementations
             _context = context;
         }
 
-        private static List<Game> _games = new List<Game>
-        {
-            new Game { Id = 1, NamaGame = "The Witcher 3", Genre = "RPG", Harga = 350000, Rating = 9.8 },
-            new Game { Id = 2, NamaGame = "FIFA 23", Genre = "Sports", Harga = 750000, Rating = 8.5 },
-            new Game { Id = 3, NamaGame = "Call of Duty: Modern Warfare", Genre = "FPS", Harga = 900000, Rating = 8.9 },
-            new Game { Id = 4, NamaGame = "Minecraft", Genre = "Sandbox", Harga = 300000, Rating = 9.5 },
-            new Game { Id = 5, NamaGame = "Genshin Impact", Genre = "Action RPG", Harga = 0, Rating = 8.7 },
-            new Game { Id = 6, NamaGame = "Grand Theft Auto V", Genre = "Action", Harga = 450000, Rating = 9.6 },
-            new Game { Id = 7, NamaGame = "Red Dead Redemption 2", Genre = "Adventure", Harga = 600000, Rating = 9.7 },
-            new Game { Id = 8, NamaGame = "Valorant", Genre = "Tactical FPS", Harga = 0, Rating = 8.3 },
-            new Game { Id = 9, NamaGame = "Elden Ring", Genre = "Action RPG", Harga = 850000, Rating = 9.4 },
-            new Game { Id = 10, NamaGame = "Cyberpunk 2077", Genre = "RPG", Harga = 700000, Rating = 8.1 }
-        };
-
         public IEnumerable<GameResponseDTO> GetAll()
         {
             return _context.Games.Select(g => new GameResponseDTO
@@ -43,14 +29,13 @@ namespace GameAPI.Services.Implementations
         {
             var gameNew = new Game
             {
-                Id = _games.Any() ? _games.Max(g => g.Id)+ 1 : 1,
                 NamaGame = newGame.NamaGame,
                 Genre = newGame.Genre,
                 Harga = newGame.Harga,
                 Rating = newGame.Rating
             };
 
-            _games.Add(gameNew);
+            _context.Games.Add(gameNew);
 
             return new GameResponseDTO
             {
@@ -64,7 +49,7 @@ namespace GameAPI.Services.Implementations
 
         public GameResponseDTO? GetById(int id)
         {
-            var game = _games.FirstOrDefault(g => g.Id == id);
+            var game = _context.Games.FirstOrDefault(g => g.Id == id);
 
             if (game == null) return null;
 
@@ -80,22 +65,26 @@ namespace GameAPI.Services.Implementations
 
         public bool Delete(int id)
         {
-            var game = _games.FirstOrDefault(g => g.Id == id);
+            var game = _context.Games.FirstOrDefault(g => g.Id == id);
             if (game == null) return false;
 
-            _games.Remove(game);
+            _context.Games.Remove(game);
+            _context.SaveChanges();
             return true;
         }
 
         public GameResponseDTO Update(int id, GameUpdateDTO updGame)
         {
-            var game = _games.FirstOrDefault(g => g.Id == id);
+            var game = _context.Games.FirstOrDefault(g => g.Id == id);
             if (game == null) return null;
 
             game.NamaGame = updGame.NamaGame;
             game.Genre = updGame.Genre;
             game.Rating = updGame.Rating;
             game.Harga = updGame.Harga;
+            game.Rating = updGame.Rating;
+
+            _context.SaveChanges();
 
             return new GameResponseDTO
             {
@@ -109,7 +98,7 @@ namespace GameAPI.Services.Implementations
 
         public IEnumerable<GameResponseDTO> GetByGenre(string? genre)
         {
-            var query = _games.AsQueryable();
+            var query = _context.Games.AsQueryable();
 
             if (!string.IsNullOrEmpty(genre))
             {
