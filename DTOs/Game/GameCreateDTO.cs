@@ -7,6 +7,9 @@ namespace GameAPI.DTOs.Game
         [Required(ErrorMessage = "Nama game harus diisi")]
         public string NamaGame { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Nama developer harus diisi")]
+        public string DevName { get; set; }
+
         [Required(ErrorMessage = "Genre game harus diisi")]
         public string Genre { get; set; } = string.Empty;
 

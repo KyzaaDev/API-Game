@@ -4,11 +4,11 @@ namespace GameAPI.Services.Interfaces
 {
     public interface IGameService
     {
-        IEnumerable<GameResponseDTO> GetAll();
-        GameResponseDTO Create(GameCreateDTO newGame);
-        GameResponseDTO GetById(int id);
-        bool Delete(int id);
-        GameResponseDTO Update(int id, GameUpdateDTO updGame);
+        Task<IEnumerable<GameResponseDTO>> GetAll();
+        Task<GameResponseDTO> Create(GameCreateDTO newGame);
+        Task<GameResponseDTO> GetById(int id);
+        Task<bool> Delete(int id);
+        Task<GameResponseDTO> Update(int id, GameUpdateDTO updGame);
         IEnumerable<GameResponseDTO> GetByGenre(string? genre);
     }
 }

@@ -2,6 +2,7 @@
 using GameAPI.DTOs.Game;
 using GameAPI.Models;
 using GameAPI.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameAPI.Services.Implementations
 {
@@ -13,19 +14,19 @@ namespace GameAPI.Services.Implementations
             _context = context;
         }
 
-        public IEnumerable<GameResponseDTO> GetAll()
+        public async Task<IEnumerable<GameResponseDTO>> GetAll()
         {
-            return _context.Games.Select(g => new GameResponseDTO
+            return await _context.Games.Select(g => new GameResponseDTO
             {
                 Id = g.Id,
                 NamaGame = g.NamaGame,
                 Genre = g.Genre,
                 Harga = g.Harga,
                 Rating = g.Rating
-            }).ToList();
+            }).ToListAsync();
         }
 
-        public GameResponseDTO Create(GameCreateDTO newGame)
+        public async Task<GameResponseDTO> Create(GameCreateDTO newGame)
         {
             var gameNew = new Game
             {
@@ -36,7 +37,7 @@ namespace GameAPI.Services.Implementations
             };
 
             _context.Games.Add(gameNew);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return new GameResponseDTO
             {
@@ -48,9 +49,9 @@ namespace GameAPI.Services.Implementations
             };
         }
 
-        public GameResponseDTO? GetById(int id)
+        public async Task<GameResponseDTO?> GetById(int id)
         {
-            var game = _context.Games.FirstOrDefault(g => g.Id == id);
+            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
 
             if (game == null) return null;
 
@@ -64,19 +65,19 @@ namespace GameAPI.Services.Implementations
             };
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var game = _context.Games.FirstOrDefault(g => g.Id == id);
+            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
             if (game == null) return false;
 
             _context.Games.Remove(game);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public GameResponseDTO Update(int id, GameUpdateDTO updGame)
+        public async Task<GameResponseDTO> Update(int id, GameUpdateDTO updGame)
         {
-            var game = _context.Games.FirstOrDefault(g => g.Id == id);
+            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
             if (game == null) return null;
 
             game.NamaGame = updGame.NamaGame;
@@ -85,7 +86,7 @@ namespace GameAPI.Services.Implementations
             game.Harga = updGame.Harga;
             game.Rating = updGame.Rating;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return new GameResponseDTO
             {

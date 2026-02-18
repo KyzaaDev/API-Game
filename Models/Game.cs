@@ -12,6 +12,9 @@ namespace GameAPI.Models
         [StringLength(100, ErrorMessage = "Nama game tidak boleh lebih dari 100 character")]
         public string NamaGame { get; set; }
 
+        [StringLength(100)]
+        public string DevName { get; set; }
+
         [MaxLength(100, ErrorMessage = "Genre tidak boleh lebih dari 100 character")]
         public string Genre { get; set; }
 

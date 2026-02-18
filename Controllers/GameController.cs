@@ -19,16 +19,16 @@ namespace GameAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<GameResponseDTO>> GetAll()
+        public async Task<ActionResult<IEnumerable<GameResponseDTO>>> GetAllAsync()
         {
-            var games = _gameService.GetAll();
+            var games = await _gameService.GetAll();
             return Ok(games);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<GameResponseDTO> GetById(int id)
+        public async Task<ActionResult<GameResponseDTO>> GetById(int id)
         {
-            var gameres = _gameService.GetById(id);
+            var gameres = await _gameService.GetById(id);
             if (gameres == null) return NotFound(new { message = "Data tidak ditemukan" });
 
             return gameres;
@@ -51,9 +51,9 @@ namespace GameAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult delete(int id)
+        public async Task<IActionResult> delete(int id)
         {
-            var game = _gameService.Delete(id);
+            var game = await _gameService.Delete(id);
             if (game == false) return NotFound(new { message = "Data tidak ditemukan" });
 
             return NoContent();

@@ -13,6 +13,9 @@ namespace GameAPI.DTOs.Game
         [Required(ErrorMessage = "Genre game harus diisi")]
         public string Genre { get; set; }
 
+        [Required(ErrorMessage = "Nama developer harus diisi")]
+        public string DevName { get; set; }
+
         [Required(ErrorMessage = "Harga harus diisi")]
         public decimal Harga { get; set; }
 
