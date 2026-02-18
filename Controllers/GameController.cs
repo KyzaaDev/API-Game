@@ -35,16 +35,16 @@ namespace GameAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<GameResponseDTO> Create([FromBody] GameCreateDTO newGame)
+        public async Task<ActionResult<GameResponseDTO>> Create([FromBody] GameCreateDTO newGame)
         {
             var game = _gameService.Create(newGame);
             return CreatedAtAction(nameof(GetById), new { id = game.Id }, game);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] GameUpdateDTO updGame)
+        public async Task<IActionResult> Update(int id, [FromBody] GameUpdateDTO updGame)
         {
-            var game = _gameService.Update(id, updGame);
+            var game = await _gameService.Update(id, updGame);
             if (game == null) return NotFound(new { message = "Data tidak ditemukan" });
 
             return NoContent();
