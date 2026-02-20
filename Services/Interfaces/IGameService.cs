@@ -8,7 +8,8 @@ namespace GameAPI.Services.Interfaces
         Task<GameResponseDTO> Create(GameCreateDTO newGame);
         Task<GameResponseDTO> GetById(int id);
         Task<bool> Delete(int id);
-        Task<GameResponseDTO> Update(int id, GameUpdateDTO updGame);
-        IEnumerable<GameResponseDTO> GetByGenre(string? genre);
+        Task<GameResponseDTO?> Update(int id, GameUpdateDTO updGame);
+        Task<IEnumerable<GameResponseDTO>> GetByGenre(string? genre);
+        Task<IEnumerable<GameResponseDTO>> FilterGames(string? genre, string? devname, decimal? harga);
     }
 }

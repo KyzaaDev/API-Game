@@ -37,12 +37,12 @@ namespace GameAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<GameResponseDTO>> Create([FromBody] GameCreateDTO newGame)
         {
-            var game = _gameService.Create(newGame);
+            var game = await _gameService.Create(newGame);
             return CreatedAtAction(nameof(GetById), new { id = game.Id }, game);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] GameUpdateDTO updGame)
+        public async Task<IActionResult?> Update(int id, [FromBody] GameUpdateDTO updGame)
         {
             var game = await _gameService.Update(id, updGame);
             if (game == null) return NotFound(new { message = "Data tidak ditemukan" });
@@ -60,12 +60,19 @@ namespace GameAPI.Controllers
         }
 
         [HttpGet("search")] 
-        public ActionResult<IEnumerable<GameResponseDTO>> GetByGenre([FromQuery] string? genre)
+        public async Task<ActionResult<IEnumerable<GameResponseDTO>>> GetByGenre([FromQuery] string? genre)
         {
-            var results = _gameService.GetByGenre(genre);
-            if (results == null && !results.Any()) return NotFound(new { message = $"Tidak ada game dengan genre {genre}" });
+            var results = await _gameService.GetByGenre(genre);
+            if (!results.Any()) return NotFound(new { message = $"Tidak ada game dengan genre {genre}" });
             return Ok(results);
+        }
 
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<GameResponseDTO>>> FilterGames([FromQuery] string? genre, [FromQuery] string? devname, [FromQuery] decimal? harga)
+        {
+            var gamesRes = await _gameService.FilterGames(genre, devname, harga);
+            if (!gamesRes.Any()) return NotFound(new { message = "Game tidak ditemukan" });
+            return Ok(gamesRes);
         }
 
 

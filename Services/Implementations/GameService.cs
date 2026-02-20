@@ -51,7 +51,7 @@ namespace GameAPI.Services.Implementations
 
         public async Task<GameResponseDTO?> GetById(int id)
         {
-            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
+            var game = await _context.Games.FindAsync(id);
 
             if (game == null) return null;
 
@@ -67,7 +67,7 @@ namespace GameAPI.Services.Implementations
 
         public async Task<bool> Delete(int id)
         {
-            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
+            var game = await _context.Games.FindAsync(id);
             if (game == null) return false;
 
             _context.Games.Remove(game);
@@ -75,16 +75,15 @@ namespace GameAPI.Services.Implementations
             return true;
         }
 
-        public async Task<GameResponseDTO> Update(int id, GameUpdateDTO updGame)
+        public async Task<GameResponseDTO?> Update(int id, GameUpdateDTO updGame)
         {
-            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
+            var game = await _context.Games.FindAsync(id);
             if (game == null) return null;
 
             game.NamaGame = updGame.NamaGame;
             game.Genre = updGame.Genre;
             game.Rating = updGame.Rating;
             game.Harga = updGame.Harga;
-            game.Rating = updGame.Rating;
 
             await _context.SaveChangesAsync();
 
@@ -98,7 +97,7 @@ namespace GameAPI.Services.Implementations
             };
         }
 
-        public IEnumerable<GameResponseDTO> GetByGenre(string? genre)
+        public async Task<IEnumerable<GameResponseDTO>> GetByGenre(string? genre)
         {
             var query = _context.Games.AsQueryable();
 
@@ -107,14 +106,35 @@ namespace GameAPI.Services.Implementations
                 query = query.Where(g => g.Genre.Contains(genre, StringComparison.CurrentCultureIgnoreCase));
             }
 
-            var games = query.Select(g => new GameResponseDTO
+            var games = await query.Select(g => new GameResponseDTO
             {
                 Id = g.Id,
                 NamaGame = g.NamaGame,
                 Genre = g.Genre,
                 Harga = g.Harga,
                 Rating = g.Rating
-            }).ToList();
+            }).ToListAsync();
+
+            return games;
+        }
+
+        public async Task<IEnumerable<GameResponseDTO>> FilterGames(string? genre, string? devname, decimal? harga)
+        {
+            var query = _context.Games.AsQueryable();
+
+            if (!string.IsNullOrEmpty(genre)) { query = query.Where(g => g.Genre.Contains(genre, StringComparison.CurrentCultureIgnoreCase)); }
+            if (!string.IsNullOrEmpty(devname))  { query = query.Where(g => g.DevName.Contains(devname, StringComparison.CurrentCultureIgnoreCase)); }
+            if (harga.HasValue) { query = query.Where(g => g.Harga <= harga); }
+                
+            var games = await query.Select(g => new GameResponseDTO
+            {
+                Id = g.Id,
+               // DevName = g.DevName,
+                NamaGame = g.NamaGame,
+                Harga = g.Harga,
+                Rating = g.Rating,
+                Genre = g.Genre
+            }).ToListAsync();
 
             return games;
         }
