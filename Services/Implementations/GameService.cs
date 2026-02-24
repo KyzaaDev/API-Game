@@ -28,12 +28,17 @@ namespace GameAPI.Services.Implementations
 
         public async Task<GameResponseDTO> Create(GameCreateDTO newGame)
         {
+            var category = await _context.Categories.FindAsync(newGame.CategoryId);
+            if (category == null) return null;
+
             var gameNew = new Game
             {
                 NamaGame = newGame.NamaGame,
                 Genre = newGame.Genre,
                 Harga = newGame.Harga,
-                Rating = newGame.Rating
+                DevName = newGame.DevName,
+                Rating = newGame.Rating,
+                CategoryId = newGame.CategoryId
             };
 
             _context.Games.Add(gameNew);
@@ -45,7 +50,7 @@ namespace GameAPI.Services.Implementations
                 NamaGame = gameNew.NamaGame,
                 Genre = gameNew.Genre,
                 Harga = gameNew.Harga,
-                Rating = gameNew.Rating
+                Rating = gameNew.Rating,
             };
         }
 

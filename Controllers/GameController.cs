@@ -38,6 +38,7 @@ namespace GameAPI.Controllers
         public async Task<ActionResult<GameResponseDTO>> Create([FromBody] GameCreateDTO newGame)
         {
             var game = await _gameService.Create(newGame);
+            if (game == null) return NotFound(new { message = $"genre dengan ID {newGame.CategoryId} tidak ditemukan" });
             return CreatedAtAction(nameof(GetById), new { id = game.Id }, game);
         }
 

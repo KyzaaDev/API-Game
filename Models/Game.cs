@@ -23,5 +23,7 @@ namespace GameAPI.Models
 
         [Range(1,10, ErrorMessage = "Rating harus pada rentang 1 sampai 10")]
         public double Rating { get; set; }
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; }
     }
 }

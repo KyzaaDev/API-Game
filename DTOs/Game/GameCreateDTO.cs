@@ -20,5 +20,8 @@ namespace GameAPI.DTOs.Game
         [Required]
         [Range(1, 10, ErrorMessage = "Rating harus pada rentang 1 sampai 10")]
         public double Rating { get; set; } = double.MaxValue;
+
+        [Required(ErrorMessage = "Harus memilih kategori game")]        
+        public int? CategoryId { get; set; }
     }
 }

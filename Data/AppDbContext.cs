@@ -8,5 +8,6 @@ namespace GameAPI.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Game> Games { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }

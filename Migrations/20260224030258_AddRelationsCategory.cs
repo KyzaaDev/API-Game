@@ -1,0 +1,64 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace GameAPI.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddRelationsCategory : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<int>(
+                name: "CategoryId",
+                table: "Games",
+                type: "int",
+                nullable: true);
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_CategoryId",
+                table: "Games",
+                column: "CategoryId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Games_Categories_CategoryId",
+                table: "Games",
+                column: "CategoryId",
+                principalTable: "Categories",
+                principalColumn: "Id");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Games_Categories_CategoryId",
+                table: "Games");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Games_CategoryId",
+                table: "Games");
+
+            migrationBuilder.DropColumn(
+                name: "CategoryId",
+                table: "Games");
+        }
+    }
+}
