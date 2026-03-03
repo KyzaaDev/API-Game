@@ -24,7 +24,7 @@ namespace GameAPI.Services.Implementations
         public async Task<AuthResponseDTO> Login(LoginRequestDTO login)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == login.Username);
-            if (user == null) throw new Exception($"Tidak ditemukan user dengan username {login.Username}");
+            if (user == null) throw new Exception("Username atau password salah!");
 
             var isPsswordValid = BCrypt.Net.BCrypt.Verify(login.Password, user.Password);
             if (!isPsswordValid) throw new Exception("Username atau password salah!");
